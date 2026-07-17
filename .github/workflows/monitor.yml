@@ -27,9 +27,9 @@ jobs:
         run: |
           git config user.name "uptime-bot"
           git config user.email "actions@github.com"
-          # タイムスタンプ行だけの差分ならコミットしない
-          if ! git diff --quiet -I '最終チェック' -- STATUS.md; then
-            git add STATUS.md
+          # HTTPステータスの構成が変わった時だけコミット(応答時間・タイムスタンプの揺れは無視)
+          if [ -n "$(git status --porcelain -- state.txt)" ]; then
+            git add STATUS.md state.txt
             git commit -m "status: $(TZ=Asia/Tokyo date '+%Y-%m-%d %H:%M JST')"
             git pull --rebase origin main
             git push

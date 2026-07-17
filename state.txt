@@ -1,0 +1,14 @@
+bizcore-v2 (CRM本体):🟢307
+bizcore-api (Cloud Run):🟢404
+apo-nittei:🟢200
+josei-radar:🟢200
+rieki-keisan-kun:🟢200
+nandg-daicho (Basic認証):🟢401
+worklens:🟢200
+sharoushi-quest:🟢200
+keibai-web (Cloud Run):🟢307
+hojokin-agent (Cloud Run):🟢200
+seikyu-automation (Cloud Run):🟢404
+shindan-tool:🟢200
+lms-supabase (企業研修LMS):🟢200
+onizuka-lms:🟢200

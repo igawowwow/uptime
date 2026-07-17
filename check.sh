@@ -7,6 +7,7 @@ FAIL=0
 RESULTS=""
 JST=$(TZ=Asia/Tokyo date '+%Y-%m-%d %H:%M JST')
 : > failed.txt
+: > state.txt
 
 while IFS=$'\t' read -r name url; do
   status="ERR"
@@ -32,12 +33,13 @@ while IFS=$'\t' read -r name url; do
     icon="🟢"
   fi
   RESULTS="${RESULTS}| ${icon} | ${name} | ${status} | ${time_total}s |\n"
+  echo "${name}:${icon}${status}" >> state.txt
 done < <(jq -r '.[] | [.name, .url] | @tsv' checks.json)
 
 {
   echo "# 📡 ヴィレグループ 全アプリ稼働状況"
   echo ""
-  echo "最終チェック: ${JST}"
+  echo "最終更新: ${JST}（状態が変化した時のみ更新。チェック自体は10分毎）"
   echo ""
   echo "| 状態 | アプリ | HTTP | 応答時間 |"
   echo "|------|--------|------|----------|"
