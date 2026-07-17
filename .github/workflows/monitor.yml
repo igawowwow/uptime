@@ -35,6 +35,31 @@ jobs:
             git push
           fi
 
+      - name: Notify Slack DM on failure
+        if: steps.check.outcome == 'failure'
+        env:
+          WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          [ -z "$WEBHOOK" ] && { echo "SLACK_WEBHOOK_URL未設定、通知スキップ"; exit 0; }
+          DOWN=$(cat failed.txt)
+          PAYLOAD=$(jq -n --arg text "🔴 *アプリ障害検知*
+          $DOWN
+          詳細: https://github.com/igawowwow/uptime/blob/main/STATUS.md" '{text: $text}')
+          curl -s -X POST -H 'Content-type: application/json' --data "$PAYLOAD" "$WEBHOOK"
+
+      - name: Notify Slack DM on recovery
+        if: steps.check.outcome == 'success'
+        env:
+          WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          [ -z "$WEBHOOK" ] && exit 0
+          PREV=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow uptime-monitor --status completed --limit 1 --json conclusion --jq '.[0].conclusion')
+          if [ "$PREV" = "failure" ]; then
+            curl -s -X POST -H 'Content-type: application/json' \
+              --data '{"text":"🟢 *全アプリ復旧* 全14アプリ正常応答に戻った。"}' "$WEBHOOK"
+          fi
+
       - name: Fail workflow if any app is down
         if: steps.check.outcome == 'failure'
         run: exit 1

@@ -6,6 +6,7 @@ set -u
 FAIL=0
 RESULTS=""
 JST=$(TZ=Asia/Tokyo date '+%Y-%m-%d %H:%M JST')
+: > failed.txt
 
 while IFS=$'\t' read -r name url; do
   status="ERR"
@@ -26,6 +27,7 @@ while IFS=$'\t' read -r name url; do
     icon="🔴"
     FAIL=1
     echo "::error::DOWN: $name ($url) status=$status"
+    echo "・${name} (status=${status}) ${url}" >> failed.txt
   else
     icon="🟢"
   fi
