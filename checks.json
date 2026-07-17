@@ -1,0 +1,16 @@
+[
+  { "name": "bizcore-v2 (CRM本体)",        "url": "https://bizcore-v2.vercel.app" },
+  { "name": "bizcore-api (Cloud Run)",     "url": "https://bizcore-api-19579559454.asia-northeast1.run.app" },
+  { "name": "apo-nittei",                  "url": "https://apo-nittei.vercel.app" },
+  { "name": "josei-radar",                 "url": "https://josei-radar.vercel.app" },
+  { "name": "rieki-keisan-kun",            "url": "https://rieki-keisan-kun.vercel.app" },
+  { "name": "nandg-daicho (Basic認証)",    "url": "https://nandg-daicho.vercel.app" },
+  { "name": "worklens",                    "url": "https://worklens-seven.vercel.app" },
+  { "name": "sharoushi-quest",             "url": "https://sharoushi-quest-rpg.vercel.app" },
+  { "name": "keibai-web (Cloud Run)",      "url": "https://keibai-web-19579559454.asia-northeast1.run.app" },
+  { "name": "hojokin-agent (Cloud Run)",   "url": "https://hojokin-agent-19579559454.asia-northeast1.run.app" },
+  { "name": "seikyu-automation (Cloud Run)", "url": "https://seikyu-automation-kk2qw742bq-an.a.run.app" },
+  { "name": "shindan-tool",                "url": "https://ville-ville.com/shindan" },
+  { "name": "lms-supabase (企業研修LMS)",  "url": "https://ai-learning-lms.pages.dev" },
+  { "name": "onizuka-lms",                 "url": "https://onizuka-lms.pages.dev" }
+]
