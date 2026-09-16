@@ -55,3 +55,16 @@ GitHub Actionsのscheduleに依存せず、外部から叩く必要がある。
 - またはUptimeRobot等の専用サービスを併用する
 
 現状は「数時間以内に気づければ十分」という前提で運用している。
+
+## 監視対象の棚卸し（2026-09-16）
+
+Vercel / Render / Cloudflare / 独自ドメインの本番稼働アプリを全件突合したところ、**13件が監視対象から漏れていた**。
+
+漏れていたもの：shimekiri / ville-mbo / ville-mokuhyo / ville-hyoka / machimon-sharoushi / sharoushi30 / genkin-uketori / kansai-calcio / yoruspo / villsee / ville-career / otakkyai / ville-ville.com
+
+全件が稼働中だったため実害は出ていなかったが、落ちても誰も気づけない状態だった。
+
+### 新規アプリを作ったら、ここに1行足すこと
+
+`checks.json` に追記するだけ。**本番公開までがワンセット**として扱う。
+棚卸しは `vercel project ls` の一覧と `checks.json` を突合すれば数分で終わる。
