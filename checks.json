@@ -112,6 +112,10 @@
     "url": "https://ville-ville.com"
   },
   {
+    "name": "calcio-manual (カルチョ運営マニュアル)",
+    "url": "https://calcio-manual.vercel.app"
+  },
+  {
     "name": "└ DB: ville-manual (Supabase)",
     "url": "https://kppjaerhdzmpevtvpbsg.supabase.co/rest/v1/"
   },
