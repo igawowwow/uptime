@@ -39,14 +39,14 @@ done < <(jq -r '.[] | [.name, .url] | @tsv' checks.json)
 {
   echo "# 📡 ヴィレグループ 全アプリ稼働状況"
   echo ""
-  echo "最終更新: ${JST}（状態が変化した時のみ更新。チェック自体は10分毎）"
+  echo "最終更新: ${JST}（状態が変化した時のみ更新）"
   echo ""
   echo "| 状態 | アプリ | HTTP | 応答時間 |"
   echo "|------|--------|------|----------|"
   printf "%b" "$RESULTS"
   echo ""
   echo "> 🟢 = 正常応答 / 🔴 = 5xxまたは応答なし。401/404/307は認証・リダイレクト等の仕様で正常扱い。"
-  echo "> 10分毎にGitHub Actionsで自動チェック。障害時はGitHubからメール通知。"
+  echo "> GitHub Actionsで自動チェック（実測の間隔は2〜5時間。下記参照）。障害時はGitHubからメール通知。"
 } > STATUS.md
 
 exit $FAIL
