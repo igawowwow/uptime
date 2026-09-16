@@ -60,6 +60,58 @@
     "url": "https://ville-manual.vercel.app/login"
   },
   {
+    "name": "shimekiri (補助金締切ナビ)",
+    "url": "https://shimekiri-navi.com"
+  },
+  {
+    "name": "ville-mbo (目標管理)",
+    "url": "https://ville-mbo.vercel.app"
+  },
+  {
+    "name": "ville-mokuhyo (粗利目標)",
+    "url": "https://ville-mokuhyo.vercel.app"
+  },
+  {
+    "name": "ville-hyoka (評価制度/Basic認証)",
+    "url": "https://ville-hyoka.vercel.app"
+  },
+  {
+    "name": "machimon-sharoushi",
+    "url": "https://machimon-sharoushi.vercel.app"
+  },
+  {
+    "name": "sharoushi30",
+    "url": "https://sharoushi30.vercel.app"
+  },
+  {
+    "name": "genkin-uketori",
+    "url": "https://genkin-uketori.vercel.app"
+  },
+  {
+    "name": "kansai-calcio",
+    "url": "https://kansai-calcio.vercel.app"
+  },
+  {
+    "name": "yoruspo",
+    "url": "https://yoruspo.vercel.app"
+  },
+  {
+    "name": "villsee (勤怠/Render)",
+    "url": "https://villsee.onrender.com"
+  },
+  {
+    "name": "ville-career (職業紹介)",
+    "url": "https://career.ville-ville.com"
+  },
+  {
+    "name": "otakkyai (オタッキーAI)",
+    "url": "https://otakkyai.com"
+  },
+  {
+    "name": "ville-ville.com (コーポレート)",
+    "url": "https://ville-ville.com"
+  },
+  {
     "name": "└ DB: ville-manual (Supabase)",
     "url": "https://kppjaerhdzmpevtvpbsg.supabase.co/rest/v1/"
   },
