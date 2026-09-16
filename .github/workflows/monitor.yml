@@ -23,14 +23,20 @@ jobs:
         run: bash check.sh
         continue-on-error: true
 
-      - name: Commit STATUS.md if changed
+      - name: Commit STATUS.md
         run: |
           git config user.name "uptime-bot"
           git config user.email "actions@github.com"
-          # HTTPステータスの構成が変わった時だけコミット(応答時間・タイムスタンプの揺れは無視)
-          if [ -n "$(git status --porcelain -- state.txt)" ]; then
+          # ステータスが変わった時に加えて、1日1回は必ずコミットする。
+          # GitHubはリポジトリが60日無活動だとscheduleワークフローを自動停止する
+          # (disabled_inactivity)。「変化時だけコミット」にしていると、全アプリが
+          # 正常な限りコミットが発生せず、監視が正常に動いているほど自滅する。
+          # 日次コミットは死活の証跡そのものでもある(止まればSTATUS.mdが古くなる)。
+          LAST_COMMIT_DAY=$(git log -1 --format=%cd --date=format:%Y-%m-%d -- STATUS.md || echo "")
+          TODAY=$(TZ=Asia/Tokyo date '+%Y-%m-%d')
+          if [ -n "$(git status --porcelain -- state.txt)" ] || [ "$LAST_COMMIT_DAY" != "$TODAY" ]; then
             git add STATUS.md state.txt
-            git commit -m "status: $(TZ=Asia/Tokyo date '+%Y-%m-%d %H:%M JST')"
+            git commit -m "status: $(TZ=Asia/Tokyo date '+%Y-%m-%d %H:%M JST')" || exit 0
             git pull --rebase origin main
             git push
           fi
@@ -54,10 +60,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           [ -z "$WEBHOOK" ] && exit 0
+          TOTAL=$(jq 'length' checks.json)
           PREV=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow uptime-monitor --status completed --limit 1 --json conclusion --jq '.[0].conclusion')
           if [ "$PREV" = "failure" ]; then
             curl -s -X POST -H 'Content-type: application/json' \
-              --data '{"text":"🟢 *全アプリ復旧* 全14アプリ正常応答に戻った。"}' "$WEBHOOK"
+              --data "{\"text\":\"🟢 *全アプリ復旧* 全${TOTAL}件が正常応答に戻った。\"}" "$WEBHOOK"
           fi
 
       - name: Fail workflow if any app is down

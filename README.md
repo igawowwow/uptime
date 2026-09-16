@@ -68,3 +68,49 @@ Vercel / Render / Cloudflare / 独自ドメインの本番稼働アプリを全�
 
 `checks.json` に追記するだけ。**本番公開までがワンセット**として扱う。
 棚卸しは `vercel project ls` の一覧と `checks.json` を突合すれば数分で終わる。
+
+## 🔴 2026-09-16: 監視が自分で止まっていた（disabled_inactivity）
+
+この日、`workflow_dispatch` が以下のエラーで失敗して発覚した。
+
+```
+Cannot trigger a 'workflow_dispatch' on a disabled workflow
+→ gh workflow list --all:  uptime-monitor  disabled_inactivity
+```
+
+**約7時間、監視が完全に止まっていた**（最後の実行 00:31 UTC / 発覚 07:38 UTC）。
+
+### 根本原因：正常に動いているほど自滅する構造だった
+
+GitHubは**リポジトリが60日間無活動だと、scheduleワークフローを自動停止する**。
+
+一方このリポジトリは、コミットが発生するのが「STATUS.mdの状態が変化した時だけ」だった。
+
+```
+全アプリ正常 → state.txt が変わらない → コミットなし
+　→ リポジトリが無活動 → 60日でGitHubが監視を自動停止
+```
+
+つまり **「障害が起きない限りコミットされない」＝「平和な期間が続くほど監視が死ぬ」** という構造。しかも止まったこと自体を知らせる仕組みがないので、気づけない。
+
+### 対策：1日1回は必ずコミットする
+
+状態変化時のコミットに加えて、**1日1回は無変化でもSTATUS.mdをコミット**するようにした。
+
+これで2つ解決する。
+
+1. リポジトリが無活動にならないので、自動停止されない
+2. **STATUS.mdの更新日時そのものが死活の証跡になる**
+   （監視が止まればSTATUS.mdが古いまま放置されるので、見れば分かる）
+
+### 監視が止まっていないかの確認方法
+
+```
+gh workflow list --repo igawowwow/uptime --all
+```
+
+`active` ならOK。`disabled_inactivity` なら以下で再開できる。
+
+```
+gh workflow enable monitor.yml --repo igawowwow/uptime
+```
