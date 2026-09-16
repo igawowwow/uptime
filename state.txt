@@ -26,6 +26,7 @@ villsee (勤怠/Render):🟢302
 ville-career (職業紹介):🟢200
 otakkyai (オタッキーAI):🟢200
 ville-ville.com (コーポレート):🟢200
+calcio-manual (カルチョ運営マニュアル):🟢200
 └ DB: ville-manual (Supabase):🟢401
 └ DB: nandg-daicho (Supabase):🟢401
 └ DB: worklens (Supabase):🟢401
