@@ -15,7 +15,7 @@ onizuka-lms:🟢200
 ville-manual (社内マニュアルWiki):🟢200
 shimekiri (補助金締切ナビ):🟢200
 ville-mbo (目標管理):🟢307
-ville-mokuhyo (粗利目標):🟢200
+ville-mokuhyo (粗利目標):🟢308
 ville-hyoka (評価制度/Basic認証):🟢401
 machimon-sharoushi:🟢200
 sharoushi30:🟢200
