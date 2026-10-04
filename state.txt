@@ -35,3 +35,4 @@ calcio-manual (カルチョ運営マニュアル):🟢200
 └ DB: onizuka-lms (Supabase):🟢401
 └ DB: apo-nittei (Supabase):🟢401
 └ DB: yoruspo (Supabase):🟢401
+kajizero (カジゼロLP):🟢200
