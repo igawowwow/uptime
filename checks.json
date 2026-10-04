@@ -146,5 +146,9 @@
   {
     "name": "└ DB: yoruspo (Supabase)",
     "url": "https://btfpzmsqdyewcswejrle.supabase.co/rest/v1/"
+  },
+  {
+    "name": "kajizero (カジゼロLP)",
+    "url": "https://kajizero.vercel.app"
   }
 ]
