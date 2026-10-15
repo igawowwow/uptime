@@ -22,7 +22,7 @@ sharoushi30:🟢200
 genkin-uketori:🟢200
 kansai-calcio:🟢200
 yoruspo:🟢200
-villsee (勤怠/Render):🔴502
+villsee (勤怠/Render):🟢302
 ville-career (職業紹介):🟢200
 otakkyai (オタッキーAI):🟢200
 ville-ville.com (コーポレート):🟢200
