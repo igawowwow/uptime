@@ -1,0 +1,73 @@
+name: uptime-monitor
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: uptime
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Run health checks
+        id: check
+        run: bash check.sh
+        continue-on-error: true
+        env:
+          CHECKS_JSON: ${{ secrets.CHECKS_JSON }}
+
+      - name: Commit STATUS.md (daily heartbeat)
+        run: |
+          git config user.name "uptime-bot"
+          git config user.email "actions@github.com"
+          # ステータスが変わった時に加えて、1日1回は必ずコミットする。
+          # GitHubはリポジトリが60日無活動だとscheduleワークフローを自動停止する
+          # (disabled_inactivity)。「変化時だけコミット」にしていると、全アプリが
+          # 正常な限りコミットが発生せず、監視が正常に動いているほど自滅する。
+          # 日次コミットは死活の証跡そのものでもある(止まればSTATUS.mdが古くなる)。
+          # STATUS.md は「日付+正常件数」だけなので、日付が変わるか件数が変わった時だけ差分が出る。
+          if [ -n "$(git status --porcelain -- STATUS.md)" ]; then
+            git add STATUS.md
+            git commit -m "status: $(TZ=Asia/Tokyo date '+%Y-%m-%d %H:%M JST')" || exit 0
+            git pull --rebase origin main
+            git push
+          fi
+
+      - name: Notify Slack DM on failure
+        if: steps.check.outcome == 'failure'
+        env:
+          WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          [ -z "$WEBHOOK" ] && { echo "SLACK_WEBHOOK_URL未設定、通知スキップ"; exit 0; }
+          DOWN=$(cat failed.txt)
+          PAYLOAD=$(jq -n --arg text "🔴 *アプリ障害検知*
+          $DOWN
+          実行: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" '{text: $text}')
+          curl -s -X POST -H 'Content-type: application/json' --data "$PAYLOAD" "$WEBHOOK"
+
+      - name: Notify Slack DM on recovery
+        if: steps.check.outcome == 'success'
+        env:
+          WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          [ -z "$WEBHOOK" ] && exit 0
+          TOTAL="${{ steps.check.outputs.total }}"
+          PREV=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow uptime-monitor --status completed --limit 1 --json conclusion --jq '.[0].conclusion')
+          if [ "$PREV" = "failure" ]; then
+            curl -s -X POST -H 'Content-type: application/json' \
+              --data "{\"text\":\"🟢 *全アプリ復旧* 全${TOTAL}件が正常応答に戻った。\"}" "$WEBHOOK"
+          fi
+
+      - name: Fail workflow if any app is down
+        if: steps.check.outcome == 'failure'
+        run: exit 1
